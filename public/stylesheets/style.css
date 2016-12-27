@@ -1,3 +1,9 @@
+.thumbnail {
+  padding: 25px;
+  height: 700px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
 .thumbnail img {
   max-height: 150px;
 }
@@ -9,4 +15,16 @@
 .price {
   font-weight: bold;
   font-size: 16px;
+}
+
+#no-items {
+  margin-top: 225px;
+  color: #ccc;
+}
+
+#custom-form-style {
+  margin-top: 25px;
+  min-height: 350px;
+  padding-bottom: 25px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }

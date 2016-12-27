@@ -10,8 +10,11 @@ var session = require("express-session");
 var passport = require("passport");
 var flash = require("connect-flash");
 var validator = require("express-validator");
+// store must be after your session so you can pass your session to it
+var MongoStore = require("connect-mongo")(session);
 
 var index = require('./routes/index');
+var userRoutes = require('./routes/user');
 
 var app = express();
 
@@ -39,13 +42,27 @@ app.use(cookieParser());
 app.use(session({
   secret: "mysupersecret",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: new MongoStore({mongooseConnection: mongoose.connection}),
+  cookie:  {maxAge: 180 * 60 * 1000} // how long should the session live before they expire: (180 mins)
 }));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// this middleware makes login and session variables available in ALL views.
+// This ensures that once the user logs in, they stay logged in until they logout.
+app.use(function(req, res, next) {
+  res.locals.login = req.isAuthenticated();
+  res.locals.session = req.session;
+  next();
+});
+
+// the '/user' (and others except '/') goes first because it checks if the route starts with "/user"
+// if the '/' was first, it would always route to '/'
+app.use('/user', userRoutes);
 app.use('/', index);
 
 // catch 404 and forward to error handler
